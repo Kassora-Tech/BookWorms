@@ -778,6 +778,35 @@
     outline: 2.5px solid var(--brass);
     outline-offset: 2px;
   }
+
+  /* ---------- bookworm mascot icon ---------- */
+  .bookworm-icon{
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    animation: worm-inch 2.4s ease-in-out infinite;
+    transform-origin: 50% 100%;
+  }
+  @keyframes worm-inch{
+    0%   { transform: scaleX(1)    translateX(0)    rotate(0deg); }
+    20%  { transform: scaleX(0.75) translateX(2px)  rotate(-3deg); }
+    40%  { transform: scaleX(1.15) translateX(-1px) rotate(2deg); }
+    55%  { transform: scaleX(1)    translateX(0)    rotate(-2deg); }
+    70%  { transform: scaleX(1)    translateX(0)    rotate(2deg); }
+    100% { transform: scaleX(1)    translateX(0)    rotate(0deg); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .bookworm-icon{ animation: none; }
+  }
+
+  /* dogear card image icons (leaf / money / pen) */
+  .dogear-icon-img{
+    width: 40px;
+    height: 40px;
+    margin-bottom: 14px;
+    display: block;
+    object-fit: contain;
+  }
 </style>
 </head>
 <body>
@@ -794,7 +823,7 @@
 <div class="page-wrap">
 
   <header class="site">
-    <div class="brand"><span class="worm">🐛</span> Bookworms</div>
+    <div class="brand"><img src="images/yourworm.jpeg" alt="Bookworm mascot" class="bookworm-icon worm"> Bookworms</div>
     <nav class="links">
       <a href="#shelf">The Shelf</a>
       <a href="#why">Why Secondhand</a>
@@ -859,17 +888,17 @@
     </div>
     <div class="why-grid">
       <div class="dogear-card">
-        <span class="dogear-icon">🌿</span>
+        <img src="images/leaf.png" alt="Leaf icon" class="dogear-icon-img">
         <h3>Kinder on the planet</h3>
         <p>Every book we resell is one less tree felled, one less truck run, one less book in a landfill.</p>
       </div>
       <div class="dogear-card">
-        <span class="dogear-icon">💰</span>
+        <img src="images/money.png" alt="Money bag icon" class="dogear-icon-img">
         <h3>Kinder on your wallet</h3>
         <p>Read twice as much for the price of one. Great stories shouldn't cost what they used to.</p>
       </div>
       <div class="dogear-card">
-        <span class="dogear-icon">✒️</span>
+        <img src="images/pen.png" alt="Quill pen icon" class="dogear-icon-img">
         <h3>Comes with character</h3>
         <p>A coffee ring. A pressed flower. A name in the front cover. Every copy carries someone's fingerprints.</p>
       </div>
@@ -1046,7 +1075,7 @@
   <footer class="site">
     <div class="footer-grid">
       <div>
-        <div class="footer-brand">🐛 Bookworms</div>
+        <div class="footer-brand"><img src="images/yourworm.jpeg" alt="Bookworm mascot" class="bookworm-icon worm" style="vertical-align:middle; margin-right:6px;"> Bookworms</div>
         <p class="footer-tag">A home for secondhand stories. Every copy has been somewhere before it gets to you.</p>
       </div>
       <div>
