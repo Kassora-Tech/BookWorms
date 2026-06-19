@@ -386,19 +386,37 @@ body.hero-scrolled .hero-eyebrow {
 .nav-hamburger {
   display: none;
   flex-direction: column; gap: 5px;
-  padding: 8px; cursor: pointer;
+  padding: 10px 8px; cursor: pointer;
+  border-radius: 4px;
+  transition: background .2s;
 }
+.nav-hamburger:hover { background: rgba(22,42,30,.07); }
 .nav-hamburger span {
   display: block; width: 22px; height: 1.5px;
   background: var(--forest);
-  transition: transform .3s ease, opacity .3s ease;
+  transition: transform .3s ease, opacity .3s ease, background .3s;
 }
+/* Hamburger → X animation when open */
+.nav-hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4.5px, 4.5px); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4.5px, -4.5px); }
 @media (max-width: 760px) { .nav-hamburger { display: flex; } }
+
+/* Hide CTA in nav on mobile — it's in the mobile menu */
+@media (max-width: 760px) {
+  .nav-cta { display: none; }
+  .site-nav { height: 60px; padding: 0 16px; }
+  .nav-brand { font-size: var(--ts-md); gap: 8px; }
+  .nav-brand .worm-img { width: 30px; height: 30px; }
+}
+/* Override light text states for hamburger when menu is open */
+.site-nav:not(.scrolled) .nav-hamburger span { background: var(--cream-soft); }
+.site-nav:not(.scrolled) .nav-hamburger.open span { background: var(--forest); }
 
 /* Mobile menu */
 .mobile-menu {
   position: fixed; inset: 0; left: 14px;
-  z-index: 700;
+  z-index: 850;
   background: rgba(237,224,198,.97);
   backdrop-filter: blur(20px);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -410,7 +428,7 @@ body.hero-scrolled .hero-eyebrow {
 .mobile-menu a {
   font-family: var(--display);
   font-style: italic;
-  font-size: var(--ts-2xl);
+  font-size: clamp(var(--ts-xl), 6vw, var(--ts-2xl));
   color: var(--forest);
   font-weight: 500;
   letter-spacing: -.02em;
@@ -418,11 +436,15 @@ body.hero-scrolled .hero-eyebrow {
 }
 .mobile-menu a:hover { color: var(--ox); }
 .mobile-close {
-  position: absolute; top: 24px; right: 24px;
+  position: absolute; top: 20px; right: 20px;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
   font-size: var(--ts-xl); color: var(--forest);
   background: none; border: none; cursor: pointer;
-  line-height: 1;
+  border-radius: 50%;
+  transition: background .2s;
 }
+.mobile-close:hover { background: rgba(22,42,30,.08); }
 
 /* ═══════════════════════════════════════════════
    HERO — CINEMATIC FULL VIEWPORT
@@ -1647,6 +1669,83 @@ section { padding: 112px var(--pad-x); position: relative; }
   flex-wrap: wrap; gap: 8px;
   letter-spacing: .04em;
 }
+
+/* ═══════════════════════════════════════════════
+   MOBILE OPTIMISATION
+═══════════════════════════════════════════════ */
+
+/* ── Hero ── */
+@media (max-width: 640px) {
+  .hero-content { padding: 88px 24px 60px; }
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero-ctas .btn { justify-content: center; text-align: center; }
+  .scroll-cue { display: none; }
+}
+
+/* ── Section padding ── */
+@media (max-width: 640px) {
+  section { padding: 72px 24px; }
+  #catalog { padding: 72px 24px !important; }
+  #categories { padding: 72px 24px; }
+  #stories { padding: 72px 24px; }
+  #trading { padding: 72px 24px; }
+  #join { padding: 72px 24px; }
+  .section-head { margin-bottom: 48px; }
+}
+
+/* ── Books grid → 2 columns on small screens ── */
+@media (max-width: 520px) {
+  .books-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .book-card-cover { height: 200px; }
+  .book-price { font-size: var(--ts-base); }
+  .book-badge { font-size: .6rem; padding: 3px 7px; }
+}
+
+/* ── Category cards ── */
+@media (max-width: 640px) {
+  .cat-grid .cat-card:first-child { min-height: 220px; }
+  .cat-card-content { padding: 20px 24px; }
+}
+
+/* ── Why cards ── */
+@media (max-width: 640px) {
+  .why-card { padding: 40px 28px; }
+  .why-num { font-size: 64px; }
+}
+
+/* ── Testimonials: hide decorative number on mobile ── */
+@media (max-width: 540px) {
+  .testi-num { display: none; }
+  .testi-item { gap: 0; }
+}
+
+/* ── Library form ── */
+@media (max-width: 640px) {
+  .library-form { padding: 36px 24px 32px; }
+  .wax-seal { right: 20px; }
+}
+
+/* ── Footer ── */
+@media (max-width: 640px) {
+  .site-footer { padding: 56px 24px 36px; }
+  .footer-ledger { display: none; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 4px; }
+}
+
+/* ── Touch targets: ensure min 44px ── */
+@media (max-width: 760px) {
+  .cat-tag { padding: 14px 20px; min-height: 44px; }
+  .testi-arrow { width: 48px; height: 48px; }
+  .testi-dot { height: 6px; border-radius: 3px; }
+  .btn { padding: 16px 28px; }
+  .btn-primary, .btn-ghost-light { min-height: 52px; }
+}
 </style>
 </head>
 <body>
@@ -2446,11 +2545,13 @@ const mobileClose = document.getElementById('mobileClose');
 
 function openMobileMenu() {
   mobileMenu.classList.add('open');
+  hamburger.classList.add('open');
   hamburger.setAttribute('aria-expanded', 'true');
   document.body.style.overflow = 'hidden';
 }
 function closeMobileMenu() {
   mobileMenu.classList.remove('open');
+  hamburger.classList.remove('open');
   hamburger.setAttribute('aria-expanded', 'false');
   document.body.style.overflow = '';
 }
