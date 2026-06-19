@@ -159,6 +159,58 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ═══════════════════════════════════════════════
+   HERO TEXT SCROLL COLOR SWAP
+═══════════════════════════════════════════════ */
+/*
+  Default (hero visible / at top of page):
+    - Title: warm gold colour
+    - Eyebrow: bright gold-light (already set inline, boost saturation)
+    - Sub: slightly warmer cream
+  hero-scrolled (past hero height):
+    - Title: reverts to cream-soft (standard palette)
+    - Eyebrow / sub: revert to original muted values
+*/
+.hero-eyebrow {
+  transition: color 0.4s ease-in-out;
+  color: var(--gold-light); /* already default; explicit for transition */
+}
+.hero-sub {
+  transition: color 0.4s ease-in-out;
+  color: rgba(245, 234, 205, 0.9); /* slightly brighter at top */
+}
+.hero-title .line-inner {
+  transition: transform .9s var(--ease-out-expo), opacity .9s var(--ease-out-expo), color 0.4s ease-in-out;
+  color: var(--gold-light); /* warm gold when hero fully in view */
+}
+.hero-title em {
+  transition: color 0.4s ease-in-out;
+  color: var(--gold); /* deeper amber on the em */
+}
+
+/* Once scrolled past hero: revert to original cream palette */
+body.hero-scrolled .hero-title .line-inner {
+  color: var(--cream-soft);
+}
+body.hero-scrolled .hero-title em {
+  color: var(--gold-light);
+}
+body.hero-scrolled .hero-sub {
+  color: rgba(245, 234, 205, 0.75);
+}
+body.hero-scrolled .hero-eyebrow {
+  color: rgba(226, 196, 122, 0.75);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-eyebrow,
+  .hero-sub,
+  .hero-title .line-inner,
+  .hero-title em {
+    transition-duration: .001ms !important;
+  }
+}
+
 /* Scroll-reveal utility */
 .reveal {
   opacity: 0;
@@ -237,6 +289,40 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
 @media (max-width: 640px) { .site-nav { left: 14px; } }
 
+/* Nav over dark hero: lighten brand, links, and CTA */
+.site-nav:not(.scrolled) .nav-brand,
+.site-nav:not(.scrolled) .nav-links a {
+  color: var(--cream-soft);
+  transition: color .4s ease;
+}
+.site-nav:not(.scrolled) .nav-links a:hover {
+  color: var(--gold-light);
+}
+.site-nav:not(.scrolled) .nav-cta {
+  color: var(--cream-soft);
+  background: rgba(245,234,205,.12);
+  border-color: rgba(201,168,76,.6);
+  transition: color .4s ease, background .4s ease, border-color .4s ease;
+}
+.site-nav:not(.scrolled) .nav-cta:hover {
+  background: rgba(245,234,205,.22);
+  border-color: var(--gold-light);
+  color: var(--gold-light);
+}
+.site-nav:not(.scrolled) .nav-hamburger span {
+  background: var(--cream-soft);
+}
+
+/* Scrolled state: restore dark-on-light colours */
+.site-nav.scrolled .nav-brand { color: var(--forest); }
+.site-nav.scrolled .nav-links a { color: var(--forest); }
+.site-nav.scrolled .nav-cta {
+  color: var(--forest);
+  background: rgba(245,234,205,.6);
+  border-color: var(--gold);
+}
+.site-nav.scrolled .nav-hamburger span { background: var(--forest); }
+
 .nav-brand {
   display: flex; align-items: center; gap: 10px;
   font-family: var(--display);
@@ -244,6 +330,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   font-size: var(--ts-lg);
   color: var(--forest);
   letter-spacing: -.01em;
+  transition: color .4s ease;
 }
 .nav-brand .worm-img {
   width: 40px; height: 40px;
@@ -2210,13 +2297,25 @@ addEventListener('resize', updateBookmark);
 updateBookmark();
 
 /* ═══════════════════════════════════════════════
-   NAV SCROLL STATE
+   NAV SCROLL STATE + HERO TEXT COLOR SWAP
 ═══════════════════════════════════════════════ */
 const nav = document.getElementById('siteNav');
+const heroSection = document.querySelector('.hero');
+
 function updateNav() {
+  const threshold = heroSection ? heroSection.offsetHeight : innerHeight;
+  const pastHero = scrollY > threshold;
   nav.classList.toggle('scrolled', scrollY > 60);
+  document.body.classList.toggle('hero-scrolled', pastHero);
 }
-addEventListener('scroll', updateNav, { passive: true });
+
+let navTicking = false;
+addEventListener('scroll', () => {
+  if (!navTicking) {
+    requestAnimationFrame(() => { updateNav(); navTicking = false; });
+    navTicking = true;
+  }
+}, { passive: true });
 updateNav();
 
 /* ═══════════════════════════════════════════════
